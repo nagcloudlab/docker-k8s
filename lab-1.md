@@ -1,0 +1,21 @@
+docker version
+
+demo-1
+
+docker pull nginx:latest
+docker images | docker image ls
+docker run -d -p 8080:80 --name webserver nginx:latest
+docker ps | docker container ls
+
+curl http://localhost:8080
+
+demo-2
+
+git clone https://github.com/nagcloudlab/docker-k8s
+cd docker-k8s/transfer-service
+cat Dockerfile
+docker build -t transfer-service:latest .
+docker image ls
+docker run -d -p 8080:8080 --name transfer-service transfer-service:latest
+
+curl http://localhost:8080
