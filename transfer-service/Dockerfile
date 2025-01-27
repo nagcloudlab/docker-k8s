@@ -1,25 +1,32 @@
-# Perform the extraction in a separate builder container
-FROM bellsoft/liberica-openjre-debian:17-cds AS builder
-WORKDIR /builder
-# This points to the built jar file in the target folder
-# Adjust this to 'build/libs/*.jar' if you're using Gradle
-ARG JAR_FILE=target/*.jar
-# Copy the jar file to the working directory and rename it to application.jar
-COPY ${JAR_FILE} application.jar
-# Extract the jar file using an efficient layout
-RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
+# Stage 1: Build the application using Maven
+FROM maven:3-amazoncorretto-17 AS builder
 
-# This is the runtime container
-FROM bellsoft/liberica-openjre-debian:17-cds
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy the source code
+COPY src ./src
+
+# Package the application (skip tests for faster builds; remove -DskipTests to include tests)
+RUN mvn clean package -DskipTests
+
+
+
+# Stage 2: Create the runtime image
+FROM openjdk:17-jdk-alpine
+
+# Set the working directory
 WORKDIR /application
-# Copy the extracted jar contents from the builder container into the working directory in the runtime container
-# Every copy step creates a new docker layer
-# This allows docker to only pull the changes it really needs
-COPY --from=builder /builder/extracted/dependencies/ ./
-COPY --from=builder /builder/extracted/spring-boot-loader/ ./
-COPY --from=builder /builder/extracted/snapshot-dependencies/ ./
-COPY --from=builder /builder/extracted/application/ ./
-# Start the application jar - this is not the uber jar used by the builder
-# This jar only contains application code and references to the extracted jar files
-# This layout is efficient to start up and CDS friendly
-ENTRYPOINT ["java", "-jar", "application.jar"]
+
+# Copy the jar file from the builder stage
+COPY --from=builder /app/target/transfer-service-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port your application runs on (default is 8080 for Spring Boot)
+EXPOSE 8080
+
+# Define the entry point to run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
