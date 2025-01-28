@@ -1,5 +1,4 @@
 # Stage 1: Compile and Build angular codebase
-
 # Use official node image as the base image
 FROM node:latest as build
 
@@ -26,3 +25,4 @@ COPY --from=build /usr/local/app/dist/ui/browser /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
+
