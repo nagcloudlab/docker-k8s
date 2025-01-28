@@ -1,4 +1,4 @@
-# Stage 1: Build the application using Maven
+# Stage 1: Build the application
 FROM maven:3-amazoncorretto-17 AS builder
 
 # Set the working directory inside the container
@@ -6,27 +6,43 @@ WORKDIR /app
 
 # Copy the pom.xml and download dependencies
 COPY pom.xml .
-RUN mvn dependency:go-offline
+
+# This will download the dependencies and cache them
+RUN mvn dependency:go-offline -B
+
 
 # Copy the source code
-COPY src ./src
+COPY src/ ./src/
 
-# Package the application (skip tests for faster builds; remove -DskipTests to include tests)
+
+# Package the application
 RUN mvn clean package -DskipTests
-
 
 
 # Stage 2: Create the runtime image
 FROM openjdk:17-jdk-alpine
 
 # Set the working directory
-WORKDIR /application
+WORKDIR /app
 
-# Copy the jar file from the builder stage
+# Copy the JAR from the builder stage
 COPY --from=builder /app/target/transfer-service-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose the port your application runs on (default is 8080 for Spring Boot)
+# Expose port 8080
 EXPOSE 8080
 
-# Define the entry point to run the application
+# RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup
+# USER appuser
+
+# HEALTHCHECK --interval=1m --timeout=10s --start-period=30s --retries=3 \
+#   CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+
+ENV SPRING_PROFILES_ACTIVE=dev
+
+# Run the application
+# CMD ["java", "-jar", "app.jar"]
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+
