@@ -72,18 +72,25 @@ curl s2
 
 traceroute s1
 traceroute s2
-traceroute chatgpt.com
-
 
 ```
 
-docker build . -t nhttpd
-docker create network backend --subnet 10.0.0.0/24
-docker create network frontend --subnet 10.0.1.0/24
+```bash
+docker network create frontend --subnet 10.0.1.0/24
+docker network inspect frontend
+docker network disconnect backend s1
+docker network connect frontend s1
+docker exec -it s1 bash
+```
 
-docker run --name s1 --network backend --cap-add=NET_ADMIN -d nhttpd
-docker run --name s2 --network frontend --cap-add=NET_ADMIN -d nhttpd
-//add it on s2
-ip route add 10.0.0.0/24 via 10.0.1.3
-//add it on s1
-ip route add 10.0.1.0/24 via 10.0.0.3
+create gateway/router for backend network to communicate with frontend network
+
+```bash
+docker run -d --name gw --network backend nhttpd
+docker network connect frontend gw
+
+docker inspect gw
+
+docker exec -it gw bash
+
+```
