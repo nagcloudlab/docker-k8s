@@ -44,7 +44,7 @@ docker rm -f myapp1 myapp2
 
 ```bash
 
-docker network create my-bridge-net
+docker network create -d bridge my-bridge-net
 docker network ls
 docker network inspect my-bridge-net
 
@@ -95,6 +95,7 @@ docker rm -f myapp1
 docker run -d --name myapp1 --network none nagabhushanamn/myapp
 docker ps
 docker inspect myapp1
+
 docker exec -it myapp1 ip addr
 docker rm -f myapp1
 ```
@@ -133,12 +134,12 @@ docker network create -d macvlan \
   --subnet 10.1.1.0/24 \
   --gateway 10.1.1.1 \
   -o parent=eth0 \
-  my-ipvlan-net
+  my-macvlan-net
 
 docker network ls
-docker network inspect my-ipvlan-net
+docker network inspect my-macvlan-net
 
-docker run -d --name myapp1 --network my-ipvlan-net nagabhushanamn/myapp
+docker run -d --name myapp1 --network my-macvlan-net nagabhushanamn/myapp
 docker ps
 docker inspect myapp1
 
