@@ -22,6 +22,12 @@ az vm create \
   --public-ip-sku Standard
 ```
 
+delete the virtual machine
+
+```bash
+az vm delete --resource-group myResourceGroup --name myVM2
+```
+
 open port 80 to allow web traffic to host
 
 ```bash
