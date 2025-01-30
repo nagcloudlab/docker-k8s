@@ -48,12 +48,14 @@ docker network create -d bridge my-bridge-net
 docker network ls
 docker network inspect my-bridge-net
 
-docker run -d -p 8081:8080 --name myapp1 --network my-bridge-net nagabhushanamn/myapp
-docker run -d -p 8082:8080 --name myapp2 --network my-bridge-net nagabhushanamn/myapp
+docker run -d --name myapp1 --network my-bridge-net nagabhushanamn/myapp
+docker run -d --name myapp2 --network my-bridge-net nagabhushanamn/myapp
 docker ps
 
-curl localhost:8081/api/info
-curl localhost:8082/api/info
+docker inspect myapp1
+
+curl 172.18.0.2:8080/api/info
+curl 172.18.0.3:8080/api/info
 
 docker exec -it myapp1 sh
 
@@ -85,6 +87,7 @@ docker-compose down
 ```bash
 docker run -d --name myapp1 --network host nagabhushanamn/myapp
 docker ps
+docker inspect myapp1
 curl localhost:8080/api/info
 docker rm -f myapp1
 ```
