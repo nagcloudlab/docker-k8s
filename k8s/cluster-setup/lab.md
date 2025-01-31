@@ -26,24 +26,22 @@ kind --version
 
 ```
 
-Install kubectl
-
-````bash
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/$(uname | tr '[:upper:]' '[:lower:]')/amd64/kubectl"
-chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl
-kubectl version --client
-
-
 Create a Kubernetes Cluster with Kind
 
 ```bash
 kind help
 kind create cluster --config kind-config.yaml --name k8s-cluster1
 kind get clusters
+```
 
+Install kubectl
 
-````
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/$(uname | tr '[:upper:]' '[:lower:]')/amd64/kubectl"
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
+```
 
 4. Verify the Cluster
 
