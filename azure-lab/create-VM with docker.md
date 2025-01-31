@@ -10,13 +10,14 @@ delete a resource group
 az group delete --name myResourceGroup
 ```
 
-create a ubuntu virtual machine in the resource group
+create a ubuntu virtual machine
 
 ```bash
 az vm create \
   --resource-group myResourceGroup \
   --name myVM \
   --image Ubuntu2404 \
+  --size Standard_D4s_v3 \
   --admin-username azureuser \
   --ssh-key-values ~/.ssh/id_rsa.pub \
   --public-ip-sku Standard
@@ -25,7 +26,7 @@ az vm create \
 delete the virtual machine
 
 ```bash
-az vm delete --resource-group myResourceGroup --name myVM2
+az vm delete --resource-group myResourceGroup --name myVM
 ```
 
 open port 80 to allow web traffic to host
@@ -44,7 +45,7 @@ ssh into the VM
 
 ```bash
 chmod 600 ~/.ssh/id_rsa
-ssh azureuser@20.204.130.52
+ssh azureuser@74.225.195.99
 ```
 
 ---

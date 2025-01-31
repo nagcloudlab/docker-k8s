@@ -1,0 +1,29 @@
+# k8s/mongodb-recommendation-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-recommendation
+  namespace: workshop
+  labels:
+    app: mongodb-recommendation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-recommendation
+  template:
+    metadata:
+      labels:
+        app: mongodb-recommendation
+    spec:
+      containers:
+        - name: mongodb-recommendation
+          image: mongo:4.4
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-recommendation-storage
+      volumes:
+        - name: mongo-recommendation-storage
+          emptyDir: {}

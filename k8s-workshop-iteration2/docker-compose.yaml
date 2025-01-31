@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  product:
+    build: ./product
+    ports:
+      - "5001:5001"
+    networks:
+      - workshop-net
+
+  recommendation:
+    build: ./recommendation
+    ports:
+      - "5002:5002"
+    networks:
+      - workshop-net
+
+  review:
+    build: ./review
+    ports:
+      - "5003:5003"
+    networks:
+      - workshop-net
+
+  product-composite:
+    build: ./product-composite
+    ports:
+      - "5000:5000"
+    depends_on:
+      - product
+      - recommendation
+      - review
+    networks:
+      - workshop-net
+
+networks:
+  workshop-net:
+    driver: bridge

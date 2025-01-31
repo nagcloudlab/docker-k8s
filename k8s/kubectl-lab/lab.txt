@@ -1,0 +1,146 @@
+1. Introduction to kubectl and Cluster Configuration
+---------------------------------------------------
+
+kubectl config get-contexts
+kubectl config current-context
+kubectl config use-context kind-k8s-cluster1
+
+2. Cluster Information
+---------------------------------------------------
+
+kubectl cluster-info
+kubectl version
+
+3. Node Management
+---------------------------------------------------
+
+kubectl get nodes
+kubectl describe node <node-name>
+
+kubectl drain <node-name> --ignore-daemonsets --delete-local-data
+kubectl drain kind-k8s-cluster1-worker1 --ignore-daemonsets --delete-local-data
+
+kubectl uncordon <node-name>
+kubectl uncordon kind-k8s-cluster1-worker1
+
+4. Pod Management
+---------------------------------------------------
+
+kubectl get pods
+kubectl get pods --all-namespaces
+kubectl describe pod <pod-name>
+kubectl logs <pod-name>
+kubectl logs <pod-name> -c <container-name>
+kubectl exec -it <pod-name> -- <command>
+kubectl delete pod <pod-name>
+
+5. Deployment Management
+---------------------------------------------------
+
+kubectl get deployments
+kubectl get deployments --all-namespaces
+kubectl describe deployment <deployment-name>
+kubectl describe deployment nginx-deploy
+kubectl apply -f <deployment-file.yaml>
+kubectl scale deployment <deployment-name> --replicas=<number>
+kubectl rollout status deployment/<deployment-name>
+kubectl rollout undo deployment/<deployment-name>
+
+
+6. Service Management
+---------------------------------------------------
+
+kubectl get services
+kubectl get services --all-namespaces
+kubectl describe service <service-name>
+kubectl apply -f <service-file.yaml>
+kubectl delete service <service-name>
+
+
+7. Ingress Management
+---------------------------------------------------
+
+kubectl get ingress
+kubectl get ingress --all-namespaces
+kubectl describe ingress <ingress-name>
+kubectl apply -f <ingress-file.yaml>
+kubectl delete ingress <ingress-name>
+
+8. ConfigMap Management
+---------------------------------------------------
+
+kubectl get configmaps
+kubectl get configmaps --all-namespaces
+kubectl describe configmap <configmap-name>
+kubectl apply -f <configmap-file.yaml>
+kubectl delete configmap <configmap-name>
+
+9. Secret Management
+---------------------------------------------------
+
+kubectl get secrets
+kubectl get secrets --all-namespaces
+kubectl describe secret <secret-name>
+kubectl apply -f <secret-file.yaml>
+kubectl delete secret <secret-name>
+
+10. Namespace Management
+---------------------------------------------------
+
+kubectl get namespaces
+kubectl describe namespace <namespace-name>
+kubectl create namespace <namespace-name>
+kubectl delete namespace <namespace-name>
+
+
+10. Logs and Debugging
+---------------------------------------------------
+
+kubectl logs <pod-name>
+kubectl logs <pod-name> -c <container-name>
+kubectl logs -f <pod-name>
+kubectl exec -it <pod-name> -- <command>
+kubectl port-forward <pod-name> <local-port>:<pod-port>
+
+
+11. Rollouts and Updates
+---------------------------------------------------
+
+kubectl rollout status deployment/<deployment-name>
+kubectl rollout undo deployment/<deployment-name>
+kubectl rollout pause deployment/<deployment-name>
+kubectl rollout resume deployment/<deployment-name>
+
+
+12. Resource Management
+---------------------------------------------------
+
+kubectl get all
+kubectl get all --all-namespaces
+
+kubectl label <resource-type> <resource-name> <label-key>=<label-value>
+kubectl label node k8s-cluster1-control-plane ingress-ready=true
+
+kubectl annotate <resource-type> <resource-name> <annotation-key>=<annotation-value>
+kubectl annotate service nginx-service ingress.class=nginx
+
+kubectl top pod
+kubectl top node
+
+
+kubectl get pods -o json
+kubectl get pods -o yaml
+kubectl get pods -o wide
+
+kubectl get pods -l <label-key>=<label-value>
+kubectl get pods -l <label-key>=<label-value> --show-labels
+
+kubectl get pods --sort-by=.metadata.creationTimestamp
+
+
+13. Advanced Commands
+---------------------------------------------------
+
+
+
+

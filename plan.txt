@@ -1,0 +1,39 @@
+
+
+i want to do training workshop on k8s,
+with more microservices
+
+1. product service
+2. recommendation service
+3. review service
+4. product-composite service
+
+external clients will call product-composite service
+product-composite service will call other services
+aggregate the result and return to client
+
+all services in python, with flask
+
+i want to showcase, on different iteration
+
+
+1. simple co-ordinating services over API calls
+2. containerizing the services
+3. with database integration
+    - product service with mongodb
+    - recommendation service with mongodb
+    - review service with postgres
+3. with k8s integration 
+    - service discovery
+    - load balancing
+    - scaling
+    - rolling update
+    - config map
+    - secret
+    - ingress
+    - monitoring
+    - logging
+    - tracing
+
+this is the plan for the workshop, help me with complete code
+for each iteration    

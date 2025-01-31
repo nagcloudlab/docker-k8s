@@ -1,0 +1,14 @@
+# k8s/product-composite-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-composite
+  namespace: workshop
+spec:
+  selector:
+    app: product-composite
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
