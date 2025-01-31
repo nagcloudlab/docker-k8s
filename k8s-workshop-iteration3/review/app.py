@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Get PostgreSQL URI from environment variable
-POSTGRES_URI = os.getenv('POSTGRES_URI', 'postgresql://postgres:password@postgres:5432/reviewdb')
+POSTGRES_URI = os.getenv('POSTGRES_URI', 'default-url')
 
 
 # Initialize SQLAlchemy

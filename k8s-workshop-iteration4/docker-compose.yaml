@@ -3,7 +3,7 @@ version: "3.8"
 services:
   product:
     build: ./product
-    image: nagabhushanamn/product:latest
+    image: nagtraininglab/product:latest
     ports:
       - "5001:5001"
     environment:
@@ -15,7 +15,7 @@ services:
 
   recommendation:
     build: ./recommendation
-    image: nagabhushanamn/recommendation:latest
+    image: nagtraininglab/recommendation:latest
     ports:
       - "5002:5002"
     environment:
@@ -27,7 +27,7 @@ services:
 
   review:
     build: ./review
-    image: nagabhushanamn/review:latest
+    image: nagtraininglab/review:latest
     ports:
       - "5003:5003"
     environment:
@@ -39,7 +39,7 @@ services:
 
   product-composite:
     build: ./product-composite
-    image: nagabhushanamn/product-composite:latest
+    image: nagtraininglab/product-composite:latest
     ports:
       - "5000:5000"
     environment:

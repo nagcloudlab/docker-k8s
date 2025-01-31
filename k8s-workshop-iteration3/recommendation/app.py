@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Get MongoDB URI from environment variable
-MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://mongodb-recommendation:27017/recommendationdb')
+MONGODB_URI = os.getenv('MONGODB_URI', 'default-url')
 
 
 # Initialize MongoDB client

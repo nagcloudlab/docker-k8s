@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: review
-          image: nagabhushanamn/review:latest
+          image: nagtraininglab/review:latest
           ports:
             - containerPort: 5003
           env:

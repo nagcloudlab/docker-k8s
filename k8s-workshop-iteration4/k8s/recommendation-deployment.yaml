@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: recommendation
-          image: nagabhushanamn/recommendation:latest
+          image: nagtraininglab/recommendation:latest
           ports:
             - containerPort: 5002
           env:
