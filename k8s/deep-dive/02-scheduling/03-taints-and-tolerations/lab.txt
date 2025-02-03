@@ -1,0 +1,88 @@
+
+
+Ex1. Taints and Tolerations Lab1 - NoSchedule Effect
+----------------------------------------------
+
+Step 1: Identify the Node for the Lab
+```bash
+kubectl get nodes
+```
+
+Step 2: Apply a Taint to the Node
+```bash
+kubectl taint nodes my-cluster-worker dedicated=experimental:NoSchedule
+kubectl describe node my-cluster-worker | grep -i taints
+``
+
+
+Step 3: Test Pod Scheduling Without a Toleration
+```bash
+kubectl run nginx-no-toleration --image=nginx --restart=Never
+kubectl get pods
+kubectl delete pod nginx-no-toleration
+```
+
+
+Ex2. Taints and Tolerations Lab2 - NoExecute Effect
+----------------------------------------------
+
+1. Modify the Pod Definition
+add the nodeName field in your pod spec and set it to the desired node's name (for example, my-cluster-worker):
+
+2. Create the Pod
+```bash
+kubectl apply -f nginx-pod.yaml
+```
+3. Verify the Pod Scheduling
+```bash
+kubectl get pods -o wide
+```
+
+4. Apply a NoExecute Taint to the Node
+```bash
+kubectl taint nodes my-cluster-worker maintenance=true:NoExecute
+kubectl describe node my-cluster-worker | grep -i taints
+```
+
+
+Ex3. Node-Selector Lab3
+-----------------------
+
+Step 1: Label a Node
+```bash
+kubectl get nodes --show-labels
+kubectl label node my-cluster-worker role=frontend
+kubectl get node my-cluster-worker --show-labels
+```
+
+Step 2: Create a Pod with a Node Selector
+```bash
+kubectl apply -f nginx-node-selector.yaml
+kubectl get pods -o wide
+kubectl get pods nginx-node-selector -o wide
+``` 
+
+
+
+Ex4. Node Affinity Lab4
+-----------------------
+
+Step 1: Label a Node
+```bash
+kubectl get nodes --show-labels
+kubectl label node my-cluster-worker environment=dev
+kubectl get node my-cluster-worker --show-labels
+```
+
+Step 2: Create a Pod with Node Affinity
+```bash
+kubectl apply -f nginx-node-affinity.yaml
+kubectl get pods -o wide
+kubectl get pods nginx-node-affinity -o wide
+```
+
+
+
+
+
+

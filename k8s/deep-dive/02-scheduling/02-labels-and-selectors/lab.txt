@@ -1,0 +1,25 @@
+
+
+create namespace lab-02
+------------------------
+kubectl create namespace lab-02
+
+switch to lab-02 namespace
+---------------------------
+kubectl config set-context $(kubectl config current-context) --namespace=lab-02
+
+
+
+kubectl apply -f nginx-pod.yaml
+kubectl get pods --selector=app=nginx
+kubectl get pods --selector=app=nginx --show-labels
+kubectl get pods --selector=app=nginx --show-labels -o wide
+
+kubectl label pod nginx-pod kind=webserver
+kubectl get pods --selector=kind=webserver --show-labels
+
+
+
+delete namespace lab-02
+------------------------
+kubectl delete namespace lab-02

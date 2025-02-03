@@ -1,0 +1,14 @@
+
+
+service
+-------
+
+
+kubectl apply -f 05-nginx-svc-definition.yaml
+kubectl get svc
+
+kubectl describe svc nginx-service
+
+kubectl get nodes -o wide
+
+curl <node-ip>:<node-port>

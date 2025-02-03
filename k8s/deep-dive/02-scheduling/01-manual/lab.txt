@@ -1,0 +1,13 @@
+
+
+kubectl get nodes -o wide
+kubectl apply -f nginx-pod.yaml
+kubectl get pods -o wide
+kubectl delete pod nginx-pod
+
+
+edit nginx-pod.yaml, set nodeName
+kubectl apply -f nginx-pod.yaml
+kubectl get pods -o wide
+kubectl delete pod nginx-pod
+

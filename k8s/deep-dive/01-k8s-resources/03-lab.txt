@@ -1,0 +1,21 @@
+
+controller : ReplicaSet
+-------------------------
+
+kubectl apply -f 03-nginx-rs-definition.yaml
+kubectl get rs
+kubectl get pods
+
+kubectl scale --replicas=5 rs/nginx-rs
+kubectl get pods
+
+kubectl edit rs/nginx-rs # change replicas to 3
+kubectl get pods
+
+edit 03-nginx-rs-definition.yaml # change replicas to 2
+kubectl apply -f 03-nginx-rs-definition.yaml
+kubectl get pods
+
+replace 03-nginx-rs-definition.yaml # change replicas to 1
+kubectl replace -f 03-nginx-rs-definition.yaml
+kubectl get pods

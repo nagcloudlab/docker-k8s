@@ -1,0 +1,39 @@
+
+
+deployment
+----------
+
+kubectl create -f 04-nginx-deploy-definition.yaml
+kubectl get deployments
+kubectl get rs
+kubectl get pods
+
+kubectl describe deployment nginx-deploy
+
+# Rolling & Versioned Updates
+--
+kubectl rollout status deployment/nginx-deploy
+kubectl rollout history deployment/nginx-deploy
+
+
+Deployment strategies
+---------------------
+
+  - Recreate
+  - RollingUpdate ( default )
+
+
+kubectl set image deployment/nginx-deploy nginx-container=nginx:1.7.1
+kubectl rollout history deployment/nginx-deploy
+
+kubectl rollout history deployment/nginx-deploy --revision=1
+kubectl rollout history deployment/nginx-deploy --revision=2
+
+kubectl rollout undo deployment/nginx-deploy --to-revision=1
+kubectl rollout history deployment/nginx-deploy
+
+kubectl rollout undo deployment/nginx-deploy --to-revision=2
+kubectl rollout history deployment/nginx-deploy
+
+kubectl delete deployment nginx-deploy
+
