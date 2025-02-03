@@ -10,15 +10,15 @@ kubectl get nodes
 
 Step 2: Apply a Taint to the Node
 ```bash
-kubectl taint nodes my-cluster-worker dedicated=experimental:NoSchedule
-kubectl describe node my-cluster-worker | grep -i taints
+kubectl taint nodes kind-cluster-worker dedicated=experimental:NoSchedule
+kubectl describe node kind-cluster-worker | grep -i taints
 ``
 
 
 Step 3: Test Pod Scheduling Without a Toleration
 ```bash
 kubectl run nginx-no-toleration --image=nginx --restart=Never
-kubectl get pods
+kubectl get pods -o wide
 kubectl delete pod nginx-no-toleration
 ```
 
@@ -40,8 +40,9 @@ kubectl get pods -o wide
 
 4. Apply a NoExecute Taint to the Node
 ```bash
-kubectl taint nodes my-cluster-worker maintenance=true:NoExecute
-kubectl describe node my-cluster-worker | grep -i taints
+kubectl taint nodes kind-cluster-worker maintenance=true:NoExecute
+kubectl describe node kind-cluster-worker | grep -i taints
+kubectl get pods -o wide
 ```
 
 
