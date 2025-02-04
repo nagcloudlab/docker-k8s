@@ -2,17 +2,11 @@
 
 kind create cluster --config kind-cluster.yaml --name kind-cluster
 
-docker ps --filter "name=kind-"
-docker update --cpus=2 --memory=2g kind-control
-docker update --cpus=1 --memory=1g kind-worker
-docker update --cpus=1 --memory=1g kind-worker2
-docker update --cpus=1 --memory=1g kind-worker3
-
 
 kubectl version
 kubectl config get-contexts
-kubectl config use-context kind-my-cluster
-kubectl cluster-info --context kind-my-cluster
+kubectl config use-context kind-kind-cluster
+kubectl cluster-info --context kind-kind-cluster
 kubectl get nodes -o wide
 
 

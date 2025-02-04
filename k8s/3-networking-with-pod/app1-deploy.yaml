@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1-deploy
+  labels:
+    app: app1
+    type: front-end
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      name: app1-pod
+      labels:
+        app: app1
+        type: front-end
+    spec:
+      containers:
+      - image: nagabhushanamn/myapp:v1
+        name: app1-container
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1-service
+spec:
+  selector:
+    app: app1
+  ports:
+   - port: 8080

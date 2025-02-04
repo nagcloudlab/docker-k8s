@@ -6,7 +6,7 @@ kubectl apply -f 03-nginx-rs-definition.yaml
 kubectl get rs
 kubectl get pods
 
-kubectl scale --replicas=5 rs/nginx-rs
+kubectl scale --replicas=3 rs/nginx-rs
 kubectl get pods
 
 kubectl edit rs/nginx-rs # change replicas to 3

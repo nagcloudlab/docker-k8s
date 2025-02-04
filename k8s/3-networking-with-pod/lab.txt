@@ -1,0 +1,11 @@
+kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+
+kubectl apply -f app1-deploy.yaml
+kubectl get rs
+kubectl get pods
+kubectl get svc
+
+
+kubectl apply -f ingress-lb-service.yaml
+kubectl get svc -n ingress-nginx
+

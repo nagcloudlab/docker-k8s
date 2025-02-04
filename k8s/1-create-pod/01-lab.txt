@@ -12,18 +12,17 @@ kubectl delete pod nginx
 kubectl run nginx --image=nginx123 --dry-run=client -o yaml
 
 
-kubectl create -f 01-nginx-pod-definition.yaml --save-config
+kubectl create -f 01-nginx-pod-definition.yaml
 kubectl get pods
-kubectl create -f 01-nginx-pod-definition.yaml --save-config
+kubectl create -f 01-nginx-pod-definition.yaml
 kubectl delete -f 01-nginx-pod-definition.yaml
-kubectl create -f 01-nginx-pod-definition.yaml --save-config
+kubectl create -f 01-nginx-pod-definition.yaml
 kubectl get pods
 kubectl delete pod nginx-pod
 
 
 kubectl apply -f 01-nginx-pod-definition.yaml 
 kubectl get pods
-
 kubectl edit pod nginx-pod
 
 

@@ -24,6 +24,7 @@ Deployment strategies
 
 
 kubectl set image deployment/nginx-deploy nginx-container=nginx:1.7.1
+kubectl describe deployment nginx-deploy
 kubectl rollout history deployment/nginx-deploy
 
 kubectl rollout history deployment/nginx-deploy --revision=1
