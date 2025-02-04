@@ -1,6 +1,14 @@
 
 
-
 kubectl config get-clusters
 kubectl config get-users
 kubectl config get-contexts
+
+// way-1
+kubectl get nodes
+
+//way-2
+curl --cacert ./ca.crt \
+     --cert ./user1.crt \
+     --key ./user1.key \
+     https://172.18.0.3:6443/api/v1/nodes

@@ -1,6 +1,6 @@
+https://kind.sigs.k8s.io/docs/user/ingress/
 
 kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
-wget https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
 
 kubectl apply -f app1-deploy.yaml
 kubectl get rs
