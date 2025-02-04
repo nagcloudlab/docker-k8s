@@ -1,0 +1,6 @@
+
+
+
+kubectl config get-clusters
+kubectl config get-users
+kubectl config get-contexts
