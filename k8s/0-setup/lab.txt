@@ -9,7 +9,8 @@ kubectl config use-context kind-kind-cluster
 kubectl cluster-info --context kind-kind-cluster
 kubectl get nodes -o wide
 
-
 kind delete cluster --name my-cluster
 
+set kubectl to default namespace
+kubectl config set-context --current --namespace=default
 
