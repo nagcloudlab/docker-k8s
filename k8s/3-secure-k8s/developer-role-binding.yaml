@@ -2,12 +2,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   namespace: default
-  name: userr-binding
+  name: developer-role-binding
 subjects:
   - kind: User
     name: user1
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
-  name: user
+  name: developer
   apiGroup: rbac.authorization.k8s.io
