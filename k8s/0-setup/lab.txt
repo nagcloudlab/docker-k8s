@@ -1,4 +1,15 @@
 
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+kind version
+
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+kubectl version --client
+
 
 kind create cluster --config kind-cluster.yaml --name kind-cluster
 
@@ -9,8 +20,7 @@ kubectl config use-context kind-kind-cluster
 kubectl cluster-info --context kind-kind-cluster
 kubectl get nodes -o wide
 
-kind delete cluster --name my-cluster
 
-set kubectl to default namespace
+kind delete cluster --name my-cluster
 kubectl config set-context --current --namespace=default
 

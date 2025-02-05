@@ -1,0 +1,66 @@
+
+
+
+Deploy mysql
+--------------
+
+kubectl apply -f monitoring-namespace.yaml
+kubectl apply -f mysql-configmap.yaml
+kubectl apply -f mysql-deployment.yaml
+kubectl get pods -n monitoring-demo
+kubectl exec -it mysql -n monitoring-demo -- mysql -u root -ppassword
+
+USE mydb;
+SHOW TABLES;
+SELECT * FROM users;
+
+exit
+
+
+
+Deploy API Server
+--------------------
+
+kubectl apply -f api-server-deployment.yaml
+kubectl get pods -n monitoring-demo
+kubectl exec -it api-server -n monitoring-demo -- sh
+
+curl http://localhost:8080/api/info
+curl http://localhost:8080/api/users
+
+
+exit
+
+
+
+Deploy nginx Server
+--------------------
+
+
+kubectl apply -f nginx-configmap.yaml
+kubectl apply -f nginx-deployment.yaml
+kubectl get pods -n monitoring-demo
+kubectl exec -it nginx -n monitoring-demo -- sh
+
+
+
+
+
+Deploy EFK
+--------------------
+
+kubectl apply -f fluent-bit-configmap.yaml
+kubectl apply -f fluent-bit-daemonset.yaml
+kubectl apply -f elasticsearch.yaml
+kubectl apply -f kibana.yaml
+
+kubectl get pods -n monitoring-demo
+
+kubectl logs -n monitoring-demo -l name=fluent-bit
+
+kubectl port-forward --address 0.0.0.0 svc/kibana -n monitoring-demo 5601:5601
+
+
+
+kubectl exec -it kibana-55578ddddc-k7mpm -n monitoring-demo -- sh
+
