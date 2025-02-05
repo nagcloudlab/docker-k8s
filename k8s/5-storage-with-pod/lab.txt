@@ -7,4 +7,4 @@ kubectl apply -f pvc.yaml
 kubectl apply -f pod-1.yaml
 kubectl apply -f pod-2.yaml
 
-kubectl port-forward rq-count-2 8082:8080
+kubectl port-forward req-count-1 8081:8080

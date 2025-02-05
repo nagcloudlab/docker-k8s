@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pvc-example
+  name: req-count-pvc
 spec:
   accessModes:
     - ReadWriteOnce
