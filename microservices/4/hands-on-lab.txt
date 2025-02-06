@@ -1,0 +1,62 @@
+
+
+
+helm repo add jetstack https://charts.jetstack.io
+
+helm repo update
+helm install cert-manager jetstack/cert-manager \
+  --create-namespace \
+  --namespace cert-manager \
+  --version v1.11.0 \
+  --set installCRDs=true \
+  --wait
+
+kubectl get pods --namespace cert-manager
+sudo bash -c "echo 127.0.0.1 minikube.me | tee -a /etc/hosts"
+
+
+eval $(minikube docker-env -u)
+./gradlew build -x test
+eval $(minikube docker-env)
+docker compose build
+
+
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+
+kubectl config set-context $(kubectl config current-context) --namespace=hands-on
+
+kubectl get certificates -w --output-watch-events
+
+helm install hands-on-dev-env kubernetes/helm/environments/dev-env -n hands-on --create-namespace --wait
+
+HOST=minikube.me PORT=8443 USE_K8S=true ./test-em-all.bash
+
+
+
+kubectl describe cert tls-certificate
+kubectl patch certificate tls-certificate --type=json -p='[{"op": "add", "path": "/spec/renewBefore", "value": "2159h59m"}]'
+kubectl get cert tls-certificate -o json | jq .status.renewalTime
+kubectl patch certificate tls-certificate --type=json -p='[{"op": "remove", "path": "/spec/renewBefore"}]'
+
+
+
+kubectl delete namespace hands-on
+
+
+eval $(minikube docker-env)
+docker compose up -d mongodb mysql rabbitmq
+
+docker tag hands-on/auth-server hands-on/auth-server:v1
+docker tag hands-on/product-composite-service hands-on/product-composite-service:v1
+docker tag hands-on/product-service hands-on/product-service:v1
+docker tag hands-on/recommendation-service hands-on/recommendation-service:v1
+docker tag hands-on/review-service hands-on/review-service:v1
+
+
+helm install hands-on-prod-env kubernetes/helm/environments/prod-env -n hands-on --create-namespace --wait
+
+HOST=minikube.me PORT=8443 USE_K8S=true ./test-em-all.bash
+kubectl delete namespace hands-on
+eval $(minikube docker-env)
+docker compose down

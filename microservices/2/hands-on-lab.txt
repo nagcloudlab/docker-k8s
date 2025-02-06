@@ -1,0 +1,5 @@
+./gradlew build -x test
+docker compose build
+docker compose up -d
+./test-em-all.bash
+docker compose down

@@ -1,0 +1,92 @@
+
+
+
+minikube status
+
+
+curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.17.0 TARGET_ARCH=x86_64 sh -
+sudo install -o root -g root -m 0755 istio-1.17.0/bin/istioctl /usr/local/bin/istioctl
+
+
+
+
+istioctl experimental precheck
+
+istioctl install --skip-confirmation \
+  --set profile=demo \
+  --set meshConfig.accessLogFile=/dev/stdout \
+  --set meshConfig.accessLogEncoding=JSON \
+  --set values.pilot.env.PILOT_JWT_PUB_KEY_REFRESH_INTERVAL=15s \
+  -f kubernetes/istio-tracing.yml
+
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all  
+
+
+
+istio_version=$(istioctl version --short --remote=false) 
+echo "Installing integrations for Istio v$istio_version"
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/1.17.0/samples/addons/kiali.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/1.17.0/samples/addons/jaeger.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/1.17.0/samples/addons/prometheus.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/1.17.0/samples/addons/grafana.yaml
+
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all
+
+kubectl -n istio-system get deploy
+
+helm upgrade --install istio-hands-on-addons kubernetes/helm/environments/istio-system -n istio-system --wait
+
+kubectl -n istio-system get secret hands-on-certificate
+kubectl -n istio-system get certificate  hands-on-certificate
+
+minikube tunnel
+
+INGRESS_IP=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo $INGRESS_IP
+
+cat /etc/hosts
+sudo nano /etc/hosts
+kubectl -n istio-system get svc
+
+MINIKUBE_HOSTS="minikube.me grafana.minikube.me kiali.minikube.
+me prometheus.minikube.me tracing.minikube.me kibana.minikube.me
+elasticsearch.minikube.me mail.minikube.me health.minikube.me"
+
+
+
+echo 127.0.0.1 $MINIKUBE_HOSTS" | sudo tee -a /etc/hosts"
+
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://kiali.minikube.me/kiali
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://tracing.minikube.me
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://grafana.minikube.me
+curl -o /dev/null -sk -L -w "%{http_code}\n" https://prometheus.minikube.me/graph#/
+
+
+
+eval $(minikube docker-env -u)
+./gradlew build -x test
+eval $(minikube docker-env)
+docker compose build
+
+kubectl delete namespace hands-on
+kubectl apply -f kubernetes/hands-on-namespace.yml
+kubectl config set-context $(kubectl config current-context) --namespace=hands-on
+
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+
+helm install hands-on-dev-env  kubernetes/helm/environments/dev-env -n hands-on --wait
+helm uninstall hands-on-dev-env
+
+kubectl get pods
+
+./test-em-all.bash
+
+
+ACCESS_TOKEN=$(curl https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -ks | jq.access_token -r)
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+siege https://minikube.me/product-composite/1 -H "Authorization: Bearer $ACCESS_TOKEN" -c1 -d1 -v
+
+
+
+kubectl port-forward svc/kiali -n istio-system 20001:20001
