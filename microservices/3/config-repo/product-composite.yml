@@ -9,7 +9,8 @@ springdoc:
     oauth2-redirect-url: /swagger-ui/oauth2-redirect.html
     oauth:
       clientId: writer
-      clientSecret: '{cipher}debb77857798ba70441b229de88624213b0a00b284f95fe31d1378d117cf3ffa'
+      # TODO: EXTERNALIZE!
+      clientSecret: secret-writer
       useBasicAuthenticationWithAccessCodeGrant: true
   oAuthFlow:
     authorizationUrl: https://localhost:8443/oauth2/authorize
@@ -77,6 +78,8 @@ api:
 
 server.port: 7000
 server.error.include-message: always
+
+spring.application.name: product-composite
 
 spring.cloud.stream:
   default.contentType: application/json

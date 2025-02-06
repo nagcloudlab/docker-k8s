@@ -1,13 +1,13 @@
 server.port: 7003
 server.error.include-message: always
 
+spring.application.name: review
+
 # Strongly recommend to set this property to "none" in a production environment!
 spring.jpa.hibernate.ddl-auto: update
 
 spring.datasource:
   url: jdbc:mysql://localhost/review-db
-  username: user
-  password: '{cipher}24b93c790fa2ed0dc5a6a2b8c39853cf4d6cd6100c248de5f279fb5dd78e7be6'
 
 spring.datasource.hikari.initializationFailTimeout: 60000
 

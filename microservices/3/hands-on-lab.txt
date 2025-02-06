@@ -1,89 +1,64 @@
 
-curl -LO https://storage.googleapis.com/minikube/releases/v1.35.0/minikube-linux-amd64
-sudo install -o root -g root -m 0755 minikube-linux-amd64 /usr/local/bin/minikube
-
-unset KUBECONFIG
-minikube start \
- --profile=handson-spring-boot-cloud \
- --memory=8g \
- --cpus=4 \
- --disk-size=10g \
- --kubernetes-version=v1.26.1 \
- --driver=docker \
- --ports=8080:80 --ports=8443:443 \
- --ports=30080:30080 --ports=30443:30443
-
-minikube profile handson-spring-boot-cloud
-minikube addons enable ingress
-minikube addons enable metrics-server
-
-minikube status
 
 
+helm repo add jetstack https://charts.jetstack.io
+
+helm repo update
+helm install cert-manager jetstack/cert-manager \
+  --create-namespace \
+  --namespace cert-manager \
+  --version v1.11.0 \
+  --set installCRDs=true \
+  --wait
+
+kubectl get pods --namespace cert-manager
+sudo bash -c "echo 127.0.0.1 minikube.me | tee -a /etc/hosts"
+
+
+eval $(minikube docker-env -u)
 ./gradlew build -x test
-
 eval $(minikube docker-env)
 docker compose build
 
 
 for f in kubernetes/helm/components/*; do helm dep up $f; done
 for f in kubernetes/helm/environments/*; do helm dep up $f; done
-helm dep ls kubernetes/helm/environments/dev-env/
+
+kubectl config set-context $(kubectl config current-context) --namespace=hands-on
+
+kubectl get certificates -w --output-watch-events
+
+helm install hands-on-dev-env kubernetes/helm/environments/dev-env -n hands-on --create-namespace --wait
+
+HOST=minikube.me PORT=8443 USE_K8S=true ./test-em-all.bash
 
 
-eval $(minikube docker-env)
-docker pull mysql:8.0.32
-docker pull mongo:6.0.4
-docker pull rabbitmq:3.11.8-management
-docker pull openzipkin/zipkin:2.24.0
+
+kubectl describe cert tls-certificate
+kubectl patch certificate tls-certificate --type=json -p='[{"op": "add", "path": "/spec/renewBefore", "value": "2159h59m"}]'
+kubectl get cert tls-certificate -o json | jq .status.renewalTime
+kubectl patch certificate tls-certificate --type=json -p='[{"op": "remove", "path": "/spec/renewBefore"}]'
 
 
-helm template kubernetes/helm/environments/dev-env
-
-helm install --dry-run --debug hands-on-dev-env kubernetes/helm/environments/dev-env
-
-helm install hands-on-dev-env kubernetes/helm/environments/dev-env -n hands-on --create-namespace
-
-kubectl config set-context $(kubectl config current-context) --namespace=hands-on  
-
-kubectl get pods --watch
-
-kubectl wait --timeout=600s --for=condition=ready pod --all
-
-kubectl get pods -o json | jq .items[].spec.containers[].image
-
-PORT=30443 USE_K8S=true ./test-em-all.bash
 
 kubectl delete namespace hands-on
-helm uninstall hands-on-dev-env
-
-
-
 
 
 eval $(minikube docker-env)
 docker compose up -d mongodb mysql rabbitmq
 
 docker tag hands-on/auth-server hands-on/auth-server:v1
-docker tag hands-on/config-server hands-on/config-server:v1
-docker tag hands-on/gateway hands-on/gateway:v1
 docker tag hands-on/product-composite-service hands-on/product-composite-service:v1
 docker tag hands-on/product-service hands-on/product-service:v1
 docker tag hands-on/recommendation-service hands-on/recommendation-service:v1
 docker tag hands-on/review-service hands-on/review-service:v1
 
-helm install hands-on-prod-env kubernetes/helm/environments/prod-env -n hands-on --create-namespace
 
-kubectl wait --timeout=600s --for=condition=ready pod --all
+helm install hands-on-prod-env kubernetes/helm/environments/prod-env -n hands-on --create-namespace --wait
 
-kubectl get pods -o json | jq .items[].spec.containers[].image
-
-CONFIG_SERVER_USR=prod-usr \
-CONFIG_SERVER_PWD=prod-pwd \
-PORT=30443 USE_K8S=true ./test-em-all.bash
-
+HOST=minikube.me PORT=8443 USE_K8S=true ./test-em-all.bash
 kubectl delete namespace hands-on
-
 eval $(minikube docker-env)
 docker compose down
-eval $(minikube docker-env -u)
+
+helm uninstall hands-on-dev-env

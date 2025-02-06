@@ -5,6 +5,7 @@ image:
   name: mysql
   tag: 8.0.32
   pullPolicy: IfNotPresent
+
 ports:
   - containerPort: 3306
 
@@ -15,4 +16,3 @@ resources:
 service:
   ports:
     - port: 3306
-

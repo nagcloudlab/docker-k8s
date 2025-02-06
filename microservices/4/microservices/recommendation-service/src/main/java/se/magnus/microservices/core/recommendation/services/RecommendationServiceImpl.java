@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -53,7 +54,7 @@ public class RecommendationServiceImpl implements RecommendationService {
   }
 
   @Override
-  public Flux<Recommendation> getRecommendations(int productId) {
+  public Flux<Recommendation> getRecommendations(HttpHeaders headers, int productId) {
 
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);

@@ -1,21 +1,3 @@
-ingress:
-  host: minikube.me
-  paths:
-    - path: /oauth2
-      service: auth-server
-    - path: /login
-      service: auth-server
-    - path: /error
-      service: auth-server
-    - path: /product-composite
-      service: product-composite
-    - path: /actuator/health
-      service: product-composite
-    - path: /openapi
-      service: product-composite
-    - path: /webjars
-      service: product-composite
-
 secrets:
 
   rabbitmq-credentials:
@@ -45,6 +27,7 @@ auth-server:
       memory: 400Mi
 
 product:
+  fullnameOverride: product-v1
   image:
     tag: v1
   env:
@@ -59,6 +42,7 @@ product:
       memory: 400Mi
 
 recommendation:
+  fullnameOverride: recommendation-v1
   image:
     tag: v1
   env:
@@ -73,6 +57,7 @@ recommendation:
       memory: 400Mi
 
 review:
+  fullnameOverride: review-v1
   image:
     tag: v1
   env:
@@ -99,12 +84,80 @@ product-composite:
     limits:
       memory: 400Mi
 
-zipkin-server:
+product-green:
+  fullnameOverride: product-v2
+  image:
+    tag: v2
   env:
-    LOGGING_LEVEL_ROOT: WARN
+    SPRING_PROFILES_ACTIVE: "docker,prod"
+  envFromSecretRefs:
+    - rabbitmq-credentials
+    - mongodb-credentials
   resources:
     requests:
-      memory: 300Mi
+      memory: 200Mi
     limits:
-      memory: 600Mi
+      memory: 400Mi
 
+recommendation-green:
+  fullnameOverride: recommendation-v2
+  image:
+    tag: v2
+  env:
+    SPRING_PROFILES_ACTIVE: "docker,prod"
+  envFromSecretRefs:
+    - rabbitmq-credentials
+    - mongodb-credentials
+  resources:
+    requests:
+      memory: 200Mi
+    limits:
+      memory: 400Mi
+
+review-green:
+  fullnameOverride: review-v2
+  image:
+    tag: v2
+  env:
+    SPRING_PROFILES_ACTIVE: "docker,prod"
+  envFromSecretRefs:
+    - rabbitmq-credentials
+    - mysql-credentials
+  resources:
+    requests:
+      memory: 200Mi
+    limits:
+      memory: 400Mi
+
+virtualServices:
+  - product
+  - recommendation
+  - review
+
+destinationRules:
+  - name: product-composite
+  - name: auth-server
+  - name: product
+    subsets:
+    - labels:
+        version: v1
+      name: old
+    - labels:
+        version: v2
+      name: new
+  - name: recommendation
+    subsets:
+    - labels:
+        version: v1
+      name: old
+    - labels:
+        version: v2
+      name: new
+  - name: review
+    subsets:
+    - labels:
+        version: v1
+      name: old
+    - labels:
+        version: v2
+      name: new

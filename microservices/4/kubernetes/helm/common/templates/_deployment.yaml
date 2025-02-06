@@ -19,8 +19,16 @@ spec:
       app.kubernetes.io/name: {{ include "common.name" . }}
   template:
     metadata:
+{{- if .Values.annotations }}
+{{- with .Values.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- end }}
       labels:
         app.kubernetes.io/name: {{ include "common.name" . }}
+        app: {{ include "common.name" . }}
+        version: {{ .Values.image.tag }}
     spec:
       containers:
         - name: {{ .Chart.Name }}

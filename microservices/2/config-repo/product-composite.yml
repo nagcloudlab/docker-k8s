@@ -94,7 +94,7 @@ spring.cloud.stream:
       producer:
         required-groups: auditGroup
 
-spring.security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
+spring.security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}
 
 resilience4j.timelimiter:
   instances:
@@ -139,7 +139,7 @@ logging:
 ---
 spring.config.activate.on-profile: docker
 
-server.port: 8080
+server.port: 80
 
 ---
 spring.config.activate.on-profile: streaming_partitioned
@@ -155,3 +155,12 @@ spring.cloud.stream.bindings.recommendations-out-0.producer:
 spring.cloud.stream.bindings.reviews-out-0.producer:
   partition-key-expression: headers['partitionKey']
   partition-count: 2
+
+---
+spring.config.activate.on-profile: prod
+
+logging:
+  level:
+    root: WARN
+    se.magnus: WARN
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: WARN

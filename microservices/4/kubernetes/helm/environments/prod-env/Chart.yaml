@@ -30,6 +30,14 @@ dependencies:
     version: 1.0.0
     repository: file://../../components/product-composite
 
-  - name: zipkin-server
+  - name: product-green
     version: 1.0.0
-    repository: file://../../components/zipkin-server
+    repository: file://../../components/product-green
+
+  - name: recommendation-green
+    version: 1.0.0
+    repository: file://../../components/recommendation-green
+
+  - name: review-green
+    version: 1.0.0
+    repository: file://../../components/review-green

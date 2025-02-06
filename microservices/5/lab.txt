@@ -1,0 +1,56 @@
+t 
+
+
+eval $(minikube docker-env -u)
+./gradlew build -x test
+eval $(minikube docker-env)
+docker-compose build
+
+kubectl delete namespace hands-on
+kubectl apply -f kubernetes/hands-on-namespace.yml
+kubectl config set-context $(kubectl config current-context)--namespace=hands-on
+
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+
+helm install hands-on-dev-env kubernetes/helm/environments/dev-env -n hands-on --wait
+
+minikube tunnel
+
+./test-em-all.bash
+
+curl https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -ks
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+curl -s https://minikube.me/product-composite/1 -H "Authorization:Bearer $ACCESS_TOKEN" -ks
+
+
+
+eval $(minikube docker-env)
+docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.10
+docker pull docker.elastic.co/kibana/kibana:7.17.10
+
+helm install logging-hands-on-add-on kubernetes/helm/environments/logging -n logging --create-namespace --wait
+
+curl https://elasticsearch.minikube.me -ks
+
+curl https://kibana.minikube.me -kLs -o /dev/null -w "%{http_code}\n"
+
+
+eval $(minikube docker-env)
+docker build -f kubernetes/efk/Dockerfile -t hands-on/fluentd:v1 kubernetes/efk/
+
+kubectl apply -f kubernetes/efk/fluentd-hands-on-configmap.yml
+kubectl apply -f kubernetes/efk/fluentd-ds.yml
+kubectl wait --timeout=120s --for=condition=Ready pod -l app=fluentd -n kube-system
+
+kubectl logs -n kube-system -l app=fluentd --tail=-1 | grep "fluentd worker is now running worker"
+
+curl https://elasticsearch.minikube.me/_all/_count -sk | jq .count
+
+ACCESS_TOKEN=$(curl -k https://writer:secret-writer@minikube.me/oauth2/token -d grant_type=client_credentials -d scope="product:readproduct:write" -s | jq .access_token -r)
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+
+curl -X POST -ks https://minikube.me/product-composite -H "Content-Type: application/json" -H "Authorization: Bearer $ACCESS_TOKEN" --data '{"productId":1234,"name":"product name 1234","weight":1234}'
+
+
+curl -H "Authorization: Bearer $ACCESS_TOKEN" -k https://minikube.me/product-composite/1234?faultPercent=100 -s | jq .

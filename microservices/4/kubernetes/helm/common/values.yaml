@@ -22,7 +22,7 @@ livenessProbe:
   httpGet:
     scheme: HTTP
     path: /actuator/health/liveness
-    port: 80
+    port: 4004
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 2
@@ -34,7 +34,7 @@ readinessProbe:
   httpGet:
     scheme: HTTP
     path: /actuator/health/readiness
-    port: 80
+    port: 4004
   initialDelaySeconds: 10
   periodSeconds: 10
   timeoutSeconds: 2

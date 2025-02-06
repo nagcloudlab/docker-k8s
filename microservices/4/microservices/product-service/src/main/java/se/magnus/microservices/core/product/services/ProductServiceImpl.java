@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import se.magnus.api.core.product.Product;
@@ -55,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
+  public Mono<Product> getProduct(HttpHeaders headers, int productId, int delay, int faultPercent) {
 
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);

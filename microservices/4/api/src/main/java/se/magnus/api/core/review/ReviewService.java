@@ -1,5 +1,6 @@
 package se.magnus.api.core.review;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,7 +18,9 @@ public interface ReviewService {
   @GetMapping(
     value = "/review",
     produces = "application/json")
-  Flux<Review> getReviews(@RequestParam(value = "productId", required = true) int productId);
+  Flux<Review> getReviews(
+    @RequestHeader HttpHeaders headers,
+    @RequestParam(value = "productId", required = true) int productId);
 
   Mono<Void> deleteReviews(int productId);
 }

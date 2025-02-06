@@ -16,8 +16,14 @@
  */
 package sample;
 
+import brave.baggage.BaggagePropagation;
+import brave.baggage.BaggagePropagationCustomizer;
+import brave.propagation.B3Propagation;
+import brave.propagation.Propagation;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 /**
  * @author Joe Grandja
@@ -25,6 +31,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class OAuth2AuthorizationServerApplication {
+
+  @Bean
+  BaggagePropagation.FactoryBuilder myPropagationFactoryBuilder(
+    ObjectProvider<BaggagePropagationCustomizer> baggagePropagationCustomizers) {
+    Propagation.Factory delegate = B3Propagation.newFactoryBuilder().injectFormat(B3Propagation.Format.MULTI).build();
+    BaggagePropagation.FactoryBuilder builder = BaggagePropagation.newFactoryBuilder(delegate);
+    baggagePropagationCustomizers.orderedStream().forEach((customizer) -> customizer.customize(builder));
+    return builder;
+  }
 
   public static void main(String[] args) {
     SpringApplication.run(OAuth2AuthorizationServerApplication.class, args);

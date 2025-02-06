@@ -12,6 +12,7 @@ spring.cloud.stream.kafka.binder:
 spring.cloud.stream.defaultBinder: rabbit
 
 # WARNING: Exposing all management endpoints over http should only be used during development, must be locked down in production!
+management.server.port: 4004
 management.endpoint.health.show-details: "ALWAYS"
 management.endpoints.web.exposure.include: "*"
 management.endpoint.health.probes.enabled: true
@@ -19,7 +20,7 @@ management.endpoint.health.group.readiness.include: readinessState, rabbit, db, 
 management.health.rabbit.enabled: true
 management.health.kafka.enabled: false
 
-management.zipkin.tracing.endpoint: http://zipkin-server:9411/api/v2/spans
+management.zipkin.tracing.endpoint: http://jaeger-collector.istio-system:9411/api/v2/spans
 management.tracing.sampling.probability: 1.0
 logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 

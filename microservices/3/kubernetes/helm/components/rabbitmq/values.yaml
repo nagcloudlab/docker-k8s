@@ -19,7 +19,7 @@ readinessProbe:
     port: 15672
     httpHeaders:
       - name: Authorization
-        value: Basic Z3Vlc3Q6Z3Vlc3Q=
+        value: Basic cmFiYml0LXVzZXItZGV2OnJhYmJpdC1wd2QtZGV2
   initialDelaySeconds: 10
   periodSeconds: 5
   timeoutSeconds: 3

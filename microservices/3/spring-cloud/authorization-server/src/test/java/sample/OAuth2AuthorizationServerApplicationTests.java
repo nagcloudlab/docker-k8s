@@ -35,7 +35,7 @@ import java.util.Base64;
  *
  * @author Josh Cummings
  */
-@SpringBootTest(properties = {"spring.cloud.config.enabled=false"})
+@SpringBootTest
 @AutoConfigureMockMvc
 class OAuth2AuthorizationServerApplicationTests {
 

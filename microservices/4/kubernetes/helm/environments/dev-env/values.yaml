@@ -1,21 +1,3 @@
-ingress:
-  host: minikube.me
-  paths:
-    - path: /oauth2
-      service: auth-server
-    - path: /login
-      service: auth-server
-    - path: /error
-      service: auth-server
-    - path: /product-composite
-      service: product-composite
-    - path: /actuator/health
-      service: product-composite
-    - path: /openapi
-      service: product-composite
-    - path: /webjars
-      service: product-composite
-
 secrets:
 
   rabbitmq-server-credentials:
@@ -79,3 +61,10 @@ review:
 product-composite:
   envFromSecretRefs:
     - rabbitmq-credentials
+
+destinationRules:
+  - name: product-composite
+  - name: auth-server
+  - name: product
+  - name: recommendation
+  - name: review

@@ -1,5 +1,6 @@
 package se.magnus.api.core.recommendation;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,6 +19,7 @@ public interface RecommendationService {
     value = "/recommendation",
     produces = "application/json")
   Flux<Recommendation> getRecommendations(
+    @RequestHeader HttpHeaders headers,
     @RequestParam(value = "productId", required = true) int productId);
 
   Mono<Void> deleteRecommendations(int productId);

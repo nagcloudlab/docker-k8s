@@ -3,6 +3,7 @@ version: '2.1'
 services:
   product:
     build: microservices/product-service
+    image: hands-on/product-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -16,6 +17,7 @@ services:
 
   recommendation:
     build: microservices/recommendation-service
+    image: hands-on/recommendation-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -29,6 +31,7 @@ services:
 
   review:
     build: microservices/review-service
+    image: hands-on/review-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -42,6 +45,7 @@ services:
 
   product-composite:
     build: microservices/product-composite-service
+    image: hands-on/product-composite-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -93,16 +97,9 @@ services:
       timeout: 2s
       retries: 60
 
-  eureka:
-    build: spring-cloud/eureka-server
-    mem_limit: 512m
-    environment:
-    - SPRING_PROFILES_ACTIVE=docker
-    - CONFIG_SERVER_USR=${CONFIG_SERVER_USR}
-    - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
-
   gateway:
     build: spring-cloud/gateway
+    image: hands-on/gateway
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -116,19 +113,21 @@ services:
 
   auth-server:
     build: spring-cloud/authorization-server
+    image: hands-on/auth-server
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - CONFIG_SERVER_USR=${CONFIG_SERVER_USR}
       - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
     healthcheck:
-      test: ["CMD", "curl", "-fs", "http://localhost:9999/actuator/health"]
+      test: ["CMD", "curl", "-fs", "http://localhost/actuator/health"]
       interval: 5s
       timeout: 2s
       retries: 60
 
   config-server:
     build: spring-cloud/config-server
+    image: hands-on/config-server
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,native

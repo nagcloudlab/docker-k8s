@@ -156,7 +156,7 @@ public class AuthorizationServerConfig {
 
   @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
-    return AuthorizationServerSettings.builder().issuer("http://auth-server:9999").build();
+    return AuthorizationServerSettings.builder().issuer("http://auth-server").build();
   }
 
   private Consumer<List<AuthenticationProvider>> configureAuthenticationValidator() {

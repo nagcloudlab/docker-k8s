@@ -1,7 +1,12 @@
 package se.magnus.microservices.core.review;
 
+import brave.baggage.BaggagePropagation;
+import brave.baggage.BaggagePropagationCustomizer;
+import brave.propagation.B3Propagation;
+import brave.propagation.Propagation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +40,15 @@ public class ReviewServiceApplication {
   public Scheduler jdbcScheduler() {
     LOG.info("Creates a jdbcScheduler with thread pool size = {}", threadPoolSize);
     return Schedulers.newBoundedElastic(threadPoolSize, taskQueueSize, "jdbc-pool");
+  }
+
+  @Bean
+  BaggagePropagation.FactoryBuilder myPropagationFactoryBuilder(
+    ObjectProvider<BaggagePropagationCustomizer> baggagePropagationCustomizers) {
+    Propagation.Factory delegate = B3Propagation.newFactoryBuilder().injectFormat(B3Propagation.Format.MULTI).build();
+    BaggagePropagation.FactoryBuilder builder = BaggagePropagation.newFactoryBuilder(delegate);
+    baggagePropagationCustomizers.orderedStream().forEach((customizer) -> customizer.customize(builder));
+    return builder;
   }
 
   public static void main(String[] args) {

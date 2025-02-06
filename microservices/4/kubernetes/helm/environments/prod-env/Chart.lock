@@ -17,8 +17,14 @@ dependencies:
 - name: product-composite
   repository: file://../../components/product-composite
   version: 1.0.0
-- name: zipkin-server
-  repository: file://../../components/zipkin-server
+- name: product-green
+  repository: file://../../components/product-green
   version: 1.0.0
-digest: sha256:c370aff2102df9e84486d7236fa4ae7748f2c9c8b0c227d909e50e4737c07768
-generated: "2021-04-30T14:35:35.685276+02:00"
+- name: recommendation-green
+  repository: file://../../components/recommendation-green
+  version: 1.0.0
+- name: review-green
+  repository: file://../../components/review-green
+  version: 1.0.0
+digest: sha256:0c163029f735163977594526cca6fc76b22cd81f74aff5e3e526c2443b46ad06
+generated: "2021-05-13T07:25:14.83198+02:00"
