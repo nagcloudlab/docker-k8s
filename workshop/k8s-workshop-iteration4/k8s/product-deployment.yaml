@@ -1,0 +1,26 @@
+# k8s/product-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product
+  namespace: workshop
+  labels:
+    app: product
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product
+  template:
+    metadata:
+      labels:
+        app: product
+    spec:
+      containers:
+        - name: product
+          image: nagtraininglab/product:latest
+          ports:
+            - containerPort: 5001
+          env:
+            - name: MONGODB_URI
+              value: "mongodb://mongodb-product:27017/productdb"

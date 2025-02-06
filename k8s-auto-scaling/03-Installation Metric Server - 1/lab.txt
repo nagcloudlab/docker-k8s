@@ -1,0 +1,21 @@
+
+
+Installation of Metric Service
+
+Objectives
+
+Installation of metric service and explore the manifest file and certificate requirements.
+
+deploy the metric server in the cluster.
+
+kubectl apply -f metric-server.yml
+
+Fix the metrics server deployment by instructing it to ignore certificate verification.
+
+kubectl edit deployment metric-server
+
+Add the following lines under the args section:
+
+
+
+kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes"

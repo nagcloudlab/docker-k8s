@@ -1,0 +1,83 @@
+
+
+# pod
+
+kubectl get pods
+kubectl run nginx --image=nginx
+kubectl describe pod nginx
+kubectl get pods -o wide
+kubectl delete pod nginx
+kubectl run redis --image=redis123 --dry-run=client -o yaml
+kubectl run redis --image=redis123 --dry-run=client -o yaml > redis-pod.yaml
+cat redis-pod.yaml
+kubectl create -f redis-pod.yaml
+kubectl get pods
+vi redis-pod.yaml
+kubectl apply -f redis-pod.yaml
+kubectl edit pod redis
+kubectl delete pod redis
+
+# controller - rc
+
+kubectl create -f rc-definition.yml
+kubectl get rc
+kubectl get pods
+
+# controller - rs
+
+kubectl create -f rs-definition.yml
+kubectl get rs
+kubectl describe rs myapp-replicaset
+kubectl get pods
+kubectl edit rs myapp-replicaset
+kubectl scale --replicas=3 -f rs-definition.yml
+kubectl replace -f rs-definition.yml
+kubectl scale replicaset myapp-replicaset --replicas=3
+kubectl scale --replicas=3 rs/myapp-replicaset
+
+# controller - deployment
+
+kubectl create -f depl-definition.yml
+kubectl get deployments
+kubectl get rs
+kubectl get pods
+
+# Rolling & Versioned Updates
+
+kubectl apply -f depl-definition.yml
+kubectl rollout status deployment/myapp-deployment
+kubectl rollout history deployment/myapp-deployment
+
+deployment strategy
+ - Recreate
+ - RollingUpdate ( default )
+
+kubectl apply -f depl-definition.yml
+kubectl set image deployment/myapp-deployment nginx-container=nginx:1.7.1
+
+kubectl rollout history deployment/myapp-deployment
+kubectl rollout history deployment/myapp-deployment --revision=2
+
+kubectl rollout undo deployment/myapp-deployment
+kubectl rollout undo deployment/myapp-deployment --to-revision=2
+
+kubectl rollout pause deployment/myapp-deployment
+kubectl rollout resume deployment/myapp-deployment
+
+kubectl delete deployment myapp-deployment
+
+
+# service
+
+kubectl get svc
+kubectl create -f svc-definition.yml
+kubectl get svc
+kubectl describe svc my-service
+
+
+
+---------------
+
+
+Voting App
+

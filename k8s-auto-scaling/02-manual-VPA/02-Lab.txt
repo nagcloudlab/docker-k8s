@@ -1,0 +1,48 @@
+
+
+Manual Scaling of a Kubernetes Deployment
+
+Objectives:
+
+Understand how resource requests and limits affect pod performance
+Manually adjust resources to simulate VPA behavior
+Observe the impact of manual resource scaling on the application
+
+--------------------------------------------------------------------------------
+
+Create a Deployment
+
+Using the deployment.yml manifest file provided , create a Kubernetes deployment for the Flask application.
+
+kubectl apply -f deployment.yml
+
+Discovery
+
+Use kubectl get deployments to observe the deployment status.
+
+kubectl get deployments
+
+Use kubectl get pods to see the running pods.
+
+kubectl get pods
+
+
+--------------------------------------------------------------------------------
+
+
+
+Manual Scale
+
+Update the resources of the deployment as below:
+
+Limits :
+memory: 380Mi
+cpu: 300m
+Requests
+memory: 256Mi
+cpu: 200m
+
+
+kubectl edit deployment flask-web-app
+
+--------------------------------------------------------------------------------

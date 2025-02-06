@@ -1,0 +1,10 @@
+
+
+
+docker-compose build
+docker-compose -f up -d
+docker-compose ps
+
+curl http://localhost:5000/product-composite/1
+
+docker-compose down

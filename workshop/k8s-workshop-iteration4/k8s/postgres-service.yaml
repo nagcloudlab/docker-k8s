@@ -1,0 +1,14 @@
+# k8s/postgres-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: workshop
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP

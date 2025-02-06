@@ -1,0 +1,88 @@
+version: "3.8"
+
+services:
+  product:
+    build: ./product
+    image: nagabhushanamn/product:latest
+    ports:
+      - "5001:5001"
+    environment:
+      - MONGODB_URI=mongodb://mongodb-product:27017/productdb
+    networks:
+      - workshop-net
+    depends_on:
+      - mongodb-product
+
+  recommendation:
+    build: ./recommendation
+    image: nagabhushanamn/recommendation:latest
+    ports:
+      - "5002:5002"
+    environment:
+      - MONGODB_URI=mongodb://mongodb-recommendation:27017/recommendationdb
+    networks:
+      - workshop-net
+    depends_on:
+      - mongodb-recommendation
+
+  review:
+    build: ./review
+    image: nagabhushanamn/review:latest
+    ports:
+      - "5003:5003"
+    environment:
+      - POSTGRES_URI=postgresql://postgres:password@postgres:5432/reviewdb
+    networks:
+      - workshop-net
+    depends_on:
+      - postgres
+
+  product-composite:
+    build: ./product-composite
+    image: nagabhushanamn/product-composite:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - PRODUCT_SERVICE_URL=http://product:5001/product/
+      - RECOMMENDATION_SERVICE_URL=http://recommendation:5002/recommendation/
+      - REVIEW_SERVICE_URL=http://review:5003/review/
+    networks:
+      - workshop-net
+    depends_on:
+      - product
+      - recommendation
+      - review
+
+  mongodb-product:
+    image: mongo:4.4
+    volumes:
+      - mongo_product_data:/data/db
+    networks:
+      - workshop-net
+
+  mongodb-recommendation:
+    image: mongo:4.4
+    volumes:
+      - mongo_recommendation_data:/data/db
+    networks:
+      - workshop-net
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: reviewdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - workshop-net
+
+networks:
+  workshop-net:
+    driver: bridge
+
+volumes:
+  mongo_product_data:
+  mongo_recommendation_data:
+  postgres_data:

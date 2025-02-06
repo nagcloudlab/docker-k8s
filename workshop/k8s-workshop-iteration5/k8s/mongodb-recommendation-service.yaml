@@ -1,0 +1,14 @@
+# k8s/mongodb-recommendation-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-recommendation
+  namespace: workshop
+spec:
+  selector:
+    app: mongodb-recommendation
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  type: ClusterIP

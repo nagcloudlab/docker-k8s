@@ -1,0 +1,14 @@
+# k8s/review-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: review
+  namespace: workshop
+spec:
+  selector:
+    app: review
+  ports:
+    - protocol: TCP
+      port: 5003
+      targetPort: 5003
+  type: ClusterIP

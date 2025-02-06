@@ -1,0 +1,26 @@
+# k8s/recommendation-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation
+  namespace: workshop
+  labels:
+    app: recommendation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendation
+  template:
+    metadata:
+      labels:
+        app: recommendation
+    spec:
+      containers:
+        - name: recommendation
+          image: nagabhushanamn/recommendation:latest
+          ports:
+            - containerPort: 5002
+          env:
+            - name: MONGODB_URI
+              value: "mongodb://mongodb-recommendation:27017/recommendationdb"
