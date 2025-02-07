@@ -1,0 +1,15 @@
+docker exec -it kind-cluster-control-plane mkdir -p /backup
+docker exec -it kind-cluster-control-plane sh
+apt-get update && apt-get install -y etcd-client
+
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key \
+  snapshot save /backup/etcd-snapshot.db
+
+docker cp kind-cluster-control-plane:/backup/etcd-snapshot.db ./etcd-snapshot.db
+kubectl get all --all-namespaces -o yaml > cluster-backup.yaml
+
+
+-------

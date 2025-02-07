@@ -1,5 +1,0 @@
-PRODUCT_SERVICE_URL: "http://product:5001/product/"
-RECOMMENDATION_SERVICE_URL: "http://recommendation:5002/recommendation/"
-REVIEW_SERVICE_URL: "http://review:5003/review/"
-LOG_LEVEL: "INFO"
-FEATURE_FLAG: "true"

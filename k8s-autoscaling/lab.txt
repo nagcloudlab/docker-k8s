@@ -1,0 +1,46 @@
+
+1️⃣ Horizontal Pod Autoscaler (HPA)
+-----------------------------------
+
+Step 1: Deploy a Sample Application
+kubectl apply -f nginx-deployment.yaml
+
+Step 2: Enable Metrics Server
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+
+Step 3: Create the HPA
+kubectl get pods -n kube-system | grep metrics-server
+kubectl autoscale deployment nginx-deployment --cpu-percent=50 --min=1 --max=5
+kubectl get hpa
+
+Step 4: Generate Load to Trigger Scaling
+
+kubectl get pods
+kubectl exec -it nginx-deployment-5945c9d75c-6ktb2 -- sh
+apt update && apt install -y stress
+stress --cpu 2 --timeout 600
+
+
+git clone https://github.com/kubernetes/autoscaler.git
+cd autoscaler/vertical-pod-autoscaler/
+
+kubectl apply -f deploy/
+
+kubectl get pods -n kube-system | grep vpa
+kubectl get vpa
+
+kubectl apply -f nginx-vpa.yaml
+
+kubectl describe vpa nginx-vpa
+kubectl top pods
+
+
+
+
+
+
+
+
+
+

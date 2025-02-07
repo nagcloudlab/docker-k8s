@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: widget-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: widget-controller
+  template:
+    metadata:
+      labels:
+        app: widget-controller
+    spec:
+      serviceAccountName: widget-controller-sa
+      containers:
+      - name: widget-controller
+        image: nagabhushanamn/widget-controller:v1
+        imagePullPolicy: Always
+
